@@ -1,0 +1,882 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio - Boni Koman</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        }
+        
+        .skill-bar {
+            position: relative;
+            background: #e5e7eb;
+            border-radius: 50px;
+            height: 12px;
+            overflow: hidden;
+        }
+        
+        .skill-progress {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            border-radius: 50px;
+            transition: width 2s ease-in-out;
+        }
+        
+        .carousel-container {
+            position: relative;
+            overflow: hidden;
+            border-radius: 20px;
+        }
+        
+        .carousel-item {
+            display: none;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        
+        .carousel-item.active {
+            display: block;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        
+        .hamburger {
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+        
+        .hamburger.active {
+            transform: rotate(90deg);
+        }
+        
+        .mobile-menu {
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+        }
+        
+        .mobile-menu.active {
+            transform: translateX(0);
+        }
+        
+        .page {
+            display: none;
+            min-height: calc(100vh - 120px);
+        }
+        
+        .page.active {
+            display: block;
+            animation: slideIn 0.3s ease-out;
+        }
+        
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .floating-elements {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: -1;
+        }
+        
+        .floating-elements::before,
+        .floating-elements::after {
+            content: '';
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            background: linear-gradient(45deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+            border-radius: 50%;
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        .floating-elements::before {
+            top: 10%;
+            left: 10%;
+            animation-delay: 0s;
+        }
+        
+        .floating-elements::after {
+            bottom: 10%;
+            right: 10%;
+            animation-delay: 3s;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(180deg); }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+    <header class="bg-white shadow-lg sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center py-4">
+                <div class="flex items-center">
+                    <h1 class="text-2xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
+                        Boni Koman
+                    </h1>
+                </div>
+              
+                <div>
+                    <button id="hamburger" class="hamburger text-gray-600 hover:text-purple-600 focus:outline-none">
+                        <i class="fas fa-bars text-2xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+              <div id="mobile-menu" class="mobile-menu fixed top-0 right-0 h-full w-80 bg-white shadow-2xl z-50">
+            <div class="p-6">
+                <button id="close-menu" class="float-right text-gray-600 hover:text-purple-600 mb-8">
+                    <i class="fas fa-times text-2xl"></i>
+                </button>
+                <div class="mt-12 space-y-6">
+                    <button onclick="showPage('accueil')" class="block w-full text-left text-gray-600 hover:text-purple-600 font-medium py-4 px-4 rounded-lg hover:bg-purple-50 transition-all text-lg">
+                        <i class="fas fa-home mr-3"></i>Accueil
+                    </button>
+                    <button onclick="showPage('apropos')" class="block w-full text-left text-gray-600 hover:text-purple-600 font-medium py-4 px-4 rounded-lg hover:bg-purple-50 transition-all text-lg">
+                        <i class="fas fa-user mr-3"></i>À propos
+                    </button>
+                    <button onclick="showPage('experience')" class="block w-full text-left text-gray-600 hover:text-purple-600 font-medium py-4 px-4 rounded-lg hover:bg-purple-50 transition-all text-lg">
+                        <i class="fas fa-briefcase mr-3"></i>Expérience
+                    </button>
+                    <button onclick="showPage('projets')" class="block w-full text-left text-gray-600 hover:text-purple-600 font-medium py-4 px-4 rounded-lg hover:bg-purple-50 transition-all text-lg">
+                        <i class="fas fa-code mr-3"></i>Projets
+                    </button>
+                    <button onclick="showPage('competences')" class="block w-full text-left text-gray-600 hover:text-purple-600 font-medium py-4 px-4 rounded-lg hover:bg-purple-50 transition-all text-lg">
+                        <i class="fas fa-cogs mr-3"></i>Compétences
+                    </button>
+                    <button onclick="showPage('contact')" class="block w-full text-left text-gray-600 hover:text-purple-600 font-medium py-4 px-4 rounded-lg hover:bg-purple-50 transition-all text-lg">
+                        <i class="fas fa-envelope mr-3"></i>Contact
+                    </button>
+                </div>
+                
+                <div class="mt-12 pt-8 border-t border-gray-200">
+                    <p class="text-gray-500 text-sm mb-4">Retrouvez-moi sur :</p>
+                    <div class="flex space-x-4">
+                        <a href="https://linkedin.com/in/bonikoman" target="_blank" class="text-blue-600 hover:text-blue-700">
+                            <i class="fab fa-linkedin text-xl"></i>
+                        </a>
+                        <a href="https://github.com/KomanBoni" target="_blank" class="text-gray-700 hover:text-gray-800">
+                            <i class="fab fa-github text-xl"></i>
+                        </a>
+                        <a href="https://gitlab.com/KomanBoni" target="_blank" class="text-orange-600 hover:text-orange-700">
+                            <i class="fab fa-gitlab text-xl"></i>
+                        </a>
+                        <a href="mailto:komanboni30@gmail.com" class="text-red-600 hover:text-red-700">
+                            <i class="fas fa-envelope text-xl"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    
+    <div id="accueil" class="page active">
+        <div class="relative">
+            <div class="floating-elements"></div>
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+                <div class="text-center mb-16">
+                    <h1 class="text-5xl md:text-7xl font-bold mb-6">
+                        <span class="bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
+                            Boni Koman
+                        </span>
+                    </h1>
+                    <p class="text-xl md:text-2xl text-gray-600 font-light">
+                        Développeur Web Full-Stack | Étudiant WebTech
+                    </p>
+                </div>
+                
+                <div class="max-w-4xl mx-auto">
+                    <div class="carousel-container bg-white rounded-3xl shadow-2xl p-8">
+                        <div class="relative">
+                            <div class="carousel-item active" id="slide-0">
+                                <div class="flex flex-col md:flex-row items-center gap-8">
+                                    <div class="md:w-1/2">
+                                        <img src="https://barcelonesite.fr/images/barcelona_2.jpg" alt="Barcelone" class="w-full h-64 object-cover rounded-2xl shadow-lg">
+                                    </div>
+                                    <div class="md:w-1/2 text-center md:text-left">
+                                        <div class="flex items-center justify-center md:justify-start mb-4">
+                                            <i class="fas fa-plane text-purple-600 text-2xl mr-3"></i>
+                                            <h3 class="text-3xl font-bold text-gray-800">Barcelone</h3>
+                                        </div>
+                                        <h4 class="text-xl font-semibold text-purple-600 mb-3">Formation E-commerce</h4>
+                                        <p class="text-gray-600 leading-relaxed">Formation en React chez un campus partenaire et visites d'entreprises. Une expérience enrichissante en 2024.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            
+                            <div class="carousel-item" id="slide-1">
+                                <div class="flex flex-col md:flex-row items-center gap-8">
+                                    <div class="md:w-1/2">
+                                        <img src="https://media.routard.com/image/88/2/ha-penny-bridge.1607882.jpg" alt="Dublin" class="w-full h-64 object-cover rounded-2xl shadow-lg">
+                                    </div>
+                                    <div class="md:w-1/2 text-center md:text-left">
+                                        <div class="flex items-center justify-center md:justify-start mb-4">
+                                            <i class="fas fa-plane text-green-600 text-2xl mr-3"></i>
+                                            <h3 class="text-3xl font-bold text-gray-800">Dublin</h3>
+                                        </div>
+                                        <h4 class="text-xl font-semibold text-green-600 mb-3">Formation Front-End</h4>
+                                        <p class="text-gray-600 leading-relaxed">Formation avancée en HTML, CSS et JavaScript chez un campus partenaire. Expérience réalisée en 2023.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="carousel-item" id="slide-2">
+                                <div class="flex flex-col md:flex-row items-center gap-8">
+                                    <div class="md:w-1/2">
+                                        <img src="https://images.unsplash.com/photo-1517935706615-2717063c2225?w=800&h=400&fit=crop" alt="Canada" class="w-full h-64 object-cover rounded-2xl shadow-lg">
+                                    </div>
+                                    <div class="md:w-1/2 text-center md:text-left">
+                                        <div class="flex items-center justify-center md:justify-start mb-4">
+                                            <i class="fas fa-plane text-red-600 text-2xl mr-3"></i>
+                                            <h3 class="text-3xl font-bold text-gray-800">Canada</h3>
+                                        </div>
+                                        <h4 class="text-xl font-semibold text-red-600 mb-3">À venir - Formation Jeu Vidéo</h4>
+                                        <p class="text-gray-600 leading-relaxed">Formation en Unity et C# chez un campus partenaire à Montréal. Prochaine aventure en préparation !</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            
+                            <button onclick="prevSlide()" class="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white hover:bg-gray-100 rounded-full p-3 shadow-lg transition-all">
+                                <i class="fas fa-chevron-left text-gray-600"></i>
+                            </button>
+                            <button onclick="nextSlide()" class="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white hover:bg-gray-100 rounded-full p-3 shadow-lg transition-all">
+                                <i class="fas fa-chevron-right text-gray-600"></i>
+                            </button>
+                        </div>
+                        
+                        
+                        <div class="flex justify-center mt-6 space-x-2">
+                            <button onclick="goToSlide(0)" class="indicator w-3 h-3 rounded-full bg-purple-600 transition-all"></button>
+                            <button onclick="goToSlide(1)" class="indicator w-3 h-3 rounded-full bg-gray-300 hover:bg-gray-400 transition-all"></button>
+                            <button onclick="goToSlide(2)" class="indicator w-3 h-3 rounded-full bg-gray-300 hover:bg-gray-400 transition-all"></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
+    <div id="apropos" class="page">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+            <h2 class="text-4xl font-bold text-center mb-16 bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">À propos de moi</h2>
+            
+            <div class="bg-white rounded-3xl shadow-2xl p-8 mb-12">
+                <div class="flex flex-col md:flex-row items-center gap-8">
+                    <div class="md:w-1/3">
+                        <div class="w-64 h-64 mx-auto bg-gradient-to-br from-purple-400 to-blue-500 rounded-full flex items-center justify-center shadow-2xl">
+                          <img src="assets/image (1).png" alt="Boni Koman" class="w-full h-full object-cover rounded-full">
+            
+                        </div>
+                    </div>
+                    <div class="md:w-2/3">
+                        <h3 class="text-2xl font-bold mb-4">Développeur passionné</h3>
+                        <p class="text-gray-600 leading-relaxed mb-6">
+                            Étudiant en développement web chez WebTech, je suis passionné par la création d'applications web modernes et innovantes. 
+                            Mon parcours m'a mené à travers différentes technologies et expériences internationales qui ont enrichi ma vision du développement.
+                        </p>
+                        <p class="text-gray-600 leading-relaxed">
+                            Toujours à la recherche de nouveaux défis, j'aime combiner créativité et technique pour créer des solutions qui font la différence.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="grid md:grid-cols-2 gap-8">
+                
+                <div class="bg-white rounded-3xl shadow-xl p-8 card-hover">
+                    <h3 class="text-2xl font-bold mb-6 text-purple-600">
+                        <i class="fas fa-rocket mr-3"></i>Mes Activités
+                    </h3>
+                    <div class="space-y-4">
+                        <div class="flex items-center p-3 bg-purple-50 rounded-lg">
+                            <i class="fas fa-futbol text-purple-600 mr-3"></i>
+                            <span>Football</span>
+                        </div>
+                        <div class="flex items-center p-3 bg-blue-50 rounded-lg">
+                            <i class="fas fa-graduation-cap text-blue-600 mr-3"></i>
+                            <span>Formation WebTech</span>
+                        </div>
+                        <div class="flex items-center p-3 bg-green-50 rounded-lg">
+                            <i class="fas fa-code text-green-600 mr-3"></i>
+                            <span>Participation aux hackathons DBH</span>
+                        </div>
+                        <div class="flex items-center p-3 bg-yellow-50 rounded-lg">
+                            <i class="fas fa-globe text-yellow-600 mr-3"></i>
+                            <span>Développement site personnel</span>
+                        </div>
+                    </div>
+                </div>
+                
+                
+                <div class="bg-white rounded-3xl shadow-xl p-8 card-hover">
+                    <h3 class="text-2xl font-bold mb-6 text-blue-600">
+                        <i class="fas fa-heart mr-3"></i>Mes Hobbies
+                    </h3>
+                    <div class="space-y-4">
+                        <div class="flex items-center p-3 bg-red-50 rounded-lg">
+                            <i class="fas fa-plane text-red-600 mr-3"></i>
+                            <span>Voyage</span>
+                        </div>
+                        <div class="flex items-center p-3 bg-green-50 rounded-lg">
+                            <i class="fas fa-dumbbell text-green-600 mr-3"></i>
+                            <span>Sport</span>
+                        </div>
+                        <div class="flex items-center p-3 bg-purple-50 rounded-lg">
+                            <i class="fas fa-film text-purple-600 mr-3"></i>
+                            <span>Cinéma</span>
+                        </div>
+                        <div class="flex items-center p-3 bg-blue-50 rounded-lg">
+                            <i class="fas fa-gamepad text-blue-600 mr-3"></i>
+                            <span>Jeux vidéo</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
+    <div id="experience" class="page">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+            <h2 class="text-4xl font-bold text-center mb-16 bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">Expérience Professionnelle</h2>
+            
+            <div class="space-y-8">
+                
+                <div class="bg-white rounded-3xl shadow-2xl p-8 card-hover">
+                    <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
+                        <div>
+                            <h3 class="text-2xl font-bold text-gray-800 mb-2">Stage QzicMe</h3>
+                            <p class="text-purple-600 font-semibold text-lg">Développeur Mobile React Native</p>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-gray-600 font-medium">03/03/2025 - 01/05/2025</p>
+                            <span class="inline-block bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium mt-2">Terminé</span>
+                        </div>
+                    </div>
+                    <div class="border-l-4 border-purple-500 pl-6">
+                        <p class="text-gray-600 leading-relaxed">
+                            Contribution au développement d'une application mobile avec React Native. 
+                            Participation active au cycle de développement complet de l'application.
+                        </p>
+                        <div class="mt-4 flex flex-wrap gap-2">
+                            <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm">React Native</span>
+                            <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm">Mobile Development</span>
+                        </div>
+                    </div>
+                </div>
+                
+                
+                <div class="bg-white rounded-3xl shadow-2xl p-8 card-hover">
+                    <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
+                        <div>
+                            <h3 class="text-2xl font-bold text-gray-800 mb-2">Transactis (Société Générale)</h3>
+                            <p class="text-blue-600 font-semibold text-lg">Développeur Python - Automatisation</p>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-gray-600 font-medium">01/03/2024 - 01/06/2024</p>
+                            <span class="inline-block bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium mt-2">Terminé</span>
+                        </div>
+                    </div>
+                    <div class="border-l-4 border-blue-500 pl-6">
+                        <p class="text-gray-600 leading-relaxed mb-4">
+                            Développement de scripts en Python pour automatiser la récupération et le traitement des flux bancaires. 
+                            Travail en coordination avec les équipes fonctionnelles et techniques pour assurer la bonne intégration des flux dans le système cible.
+                        </p>
+                        <div class="grid md:grid-cols-2 gap-4 text-sm text-gray-600">
+                            <div class="flex items-center">
+                                <i class="fas fa-check-circle text-green-500 mr-2"></i>
+                                Automatisation des processus bancaires
+                            </div>
+                            <div class="flex items-center">
+                                <i class="fas fa-check-circle text-green-500 mr-2"></i>
+                                Coordination avec équipes techniques
+                            </div>
+                            <div class="flex items-center">
+                                <i class="fas fa-check-circle text-green-500 mr-2"></i>
+                                Traitement de flux de données
+                            </div>
+                            <div class="flex items-center">
+                                <i class="fas fa-check-circle text-green-500 mr-2"></i>
+                                Intégration système
+                            </div>
+                        </div>
+                        <div class="mt-4 flex flex-wrap gap-2">
+                            <span class="bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full text-sm">Python</span>
+                            <span class="bg-red-100 text-red-800 px-3 py-1 rounded-full text-sm">Automatisation</span>
+                            <span class="bg-purple-100 text-purple-800 px-3 py-1 rounded-full text-sm">Flux bancaires</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
+    <div id="projets" class="page">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+            <h2 class="text-4xl font-bold text-center mb-16 bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">Mes Projets</h2>
+            
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Projet TemoinX -->
+                <div class="bg-white rounded-3xl shadow-2xl p-6 card-hover">
+                    <div class="h-48 bg-gradient-to-br from-purple-400 to-pink-400 rounded-2xl mb-6 flex items-center justify-center">
+                        <img src="assets/Temoin X.png" alt="TemoinX" class="w-full h-full object-cover rounded-2xl">
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">TemoinX</h3>
+                    <p class="text-gray-600 text-sm mb-4">
+                        Application de signalement via carte interactive développée lors d'un code camp d'une semaine. 
+                        Système d'authentification et récupération de statistiques.
+                    </p>
+                    <div class="flex flex-wrap gap-2 mb-4">
+                        <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs">React.js</span>
+                        <span class="bg-green-100 text-green-800 px-2 py-1 rounded text-xs">Node.js</span>
+                        <span class="bg-purple-100 text-purple-800 px-2 py-1 rounded text-xs">PostgreSQL</span>
+                        <span class="bg-yellow-100 text-yellow-800 px-2 py-1 rounded text-xs">Google Maps API</span>
+                    </div>
+                </div>
+                
+                
+                <div class="bg-white rounded-3xl shadow-2xl p-6 card-hover">
+                    <div class="h-48 bg-gradient-to-br from-blue-400 to-cyan-400 rounded-2xl mb-6 flex items-center justify-center">
+                        <img src="assets/arduino.jpg" alt="Usine Connectée" class="w-full h-full object-cover rounded-2xl">
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">Usine Connectée</h3>
+                    <p class="text-gray-600 text-sm mb-4">
+                        Projet de groupe, création d'une usine connectée en Arduino avec une balance, 
+                        un micro-onde, une interface de gestion, etc...
+                    </p>
+                    <div class="flex flex-wrap gap-2 mb-4">
+                        <span class="bg-red-100 text-red-800 px-2 py-1 rounded text-xs">Arduino</span>
+                        <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs">C++</span>
+                    </div>
+                </div>
+                
+
+                <div class="bg-white rounded-3xl shadow-2xl p-6 card-hover">
+                    <div class="h-48 bg-gradient-to-br from-green-400 to-emerald-400 rounded-2xl mb-6 flex items-center justify-center">
+                        <img src="assets/Django.jpg" alt="App Django Football" class="w-full h-full object-cover rounded-2xl">
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">App Django Football</h3>
+                    <p class="text-gray-600 text-sm mb-4">
+                        Application Django développée en 1 semaine lors de la piscine webtech. 
+                        Permet de répertorier des footballeurs et leurs clubs.
+                    </p>
+                    <div class="flex flex-wrap gap-2 mb-4">
+                        <span class="bg-green-100 text-green-800 px-2 py-1 rounded text-xs">Django</span>
+                        <span class="bg-yellow-100 text-yellow-800 px-2 py-1 rounded text-xs">Python</span>
+                    </div>
+                </div>
+                
+                
+                <div class="bg-white rounded-3xl shadow-2xl p-6 card-hover">
+                    <div class="h-48 bg-gradient-to-br from-orange-400 to-red-400 rounded-2xl mb-6 flex items-center justify-center">
+                        <img src="assets/salle de sport.png" alt="App Réservation Sportive" class="w-full h-full object-cover rounded-2xl">
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">App Réservation Sportive</h3>
+                    <p class="text-gray-600 text-sm mb-4">
+                        Application de réservation pour événements sportifs. 
+                        Possibilité de réserver, supprimer ou modifier les réservations.
+                    </p>
+                    <div class="flex flex-wrap gap-2 mb-4">
+                        <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs">Web App</span>
+                        <span class="bg-purple-100 text-purple-800 px-2 py-1 rounded text-xs">Gestion</span>
+                    </div>
+                </div>
+                
+                
+                <div class="bg-white rounded-3xl shadow-2xl p-6 card-hover">
+                    <div class="h-48 bg-gradient-to-br from-purple-400 to-blue-400 rounded-2xl mb-6 flex items-center justify-center">
+                        <img src="assets/Barcelone.png" alt="App E-commerce Barcelona" class="w-full h-full object-cover rounded-2xl">
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">App E-commerce Barcelona</h3>
+                    <p class="text-gray-600 text-sm mb-4">
+                        Application e-commerce pour la vente de produits FC Barcelone X Nike 
+                        développée lors de mon voyage à Barcelone.
+                    </p>
+                    <div class="flex flex-wrap gap-2 mb-4">
+                        <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs">React</span>
+                        <span class="bg-gray-100 text-gray-800 px-2 py-1 rounded text-xs">Docker</span>
+                        <span class="bg-green-100 text-green-800 px-2 py-1 rounded text-xs">API Stripe</span>
+                    </div>
+                </div>
+                
+                
+                <div class="bg-white rounded-3xl shadow-2xl p-6 card-hover">
+                    <div class="h-48 bg-gradient-to-br from-yellow-400 to-orange-400 rounded-2xl mb-6 flex items-center justify-center">
+                        <img src="assets/bleach.png" alt="Jeu d'attaque Bleach" class="w-full h-full object-cover rounded-2xl">
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">Jeu d'attaque Bleach</h3>
+                    <p class="text-gray-600 text-sm mb-4">
+                        Mon premier projet React ! Jeu d'attaque tour par tour avec choix du personnage, 
+                        de l'équipe adverse et des attaques.
+                    </p>
+                    <div class="flex flex-wrap gap-2 mb-4">
+                        <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs">React</span>
+                        <span class="bg-pink-100 text-pink-800 px-2 py-1 rounded text-xs">CSS</span>
+                        <span class="bg-yellow-100 text-yellow-800 px-2 py-1 rounded text-xs">JSON</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
+    <div id="competences" class="page">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+            <h2 class="text-4xl font-bold text-center mb-16 bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">Mes Compétences</h2>
+            
+            <div class="bg-white rounded-3xl shadow-2xl p-8">
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div class="space-y-4">
+                        <div class="flex justify-between items-center">
+                            <span class="font-semibold text-gray-800">HTML / CSS</span>
+                            <span class="text-sm text-gray-600">90%</span>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-progress" style="width: 90%"></div>
+                        </div>
+                    </div>
+                    
+                    
+                    <div class="space-y-4">
+                        <div class="flex justify-between items-center">
+                            <span class="font-semibold text-gray-800">JavaScript</span>
+                            <span class="text-sm text-gray-600">85%</span>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-progress" style="width: 85%"></div>
+                        </div>
+                    </div>
+                    
+                    
+                    <div class="space-y-4">
+                        <div class="flex justify-between items-center">
+                            <span class="font-semibold text-gray-800">ReactJS</span>
+                            <span class="text-sm text-gray-600">80%</span>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-progress" style="width: 80%"></div>
+                        </div>
+                    </div>
+                    
+                    
+                    <div class="space-y-4">
+                        <div class="flex justify-between items-center">
+                            <span class="font-semibold text-gray-800">Python</span>
+                            <span class="text-sm text-gray-600">75%</span>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-progress" style="width: 75%"></div>
+                        </div>
+                    </div>
+                    
+                    
+                    <div class="space-y-4">
+                        <div class="flex justify-between items-center">
+                            <span class="font-semibold text-gray-800">React Native</span>
+                            <span class="text-sm text-gray-600">70%</span>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-progress" style="width: 70%"></div>
+                        </div>
+                    </div>
+                    
+                    
+                    <div class="space-y-4">
+                        <div class="flex justify-between items-center">
+                            <span class="font-semibold text-gray-800">UX / UI</span>
+                            <span class="text-sm text-gray-600">65%</span>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-progress" style="width: 65%"></div>
+                        </div>
+                    </div>
+                    
+                    
+                    <div class="space-y-4">
+                        <div class="flex justify-between items-center">
+                            <span class="font-semibold text-gray-800">GitHub</span>
+                            <span class="text-sm text-gray-600">85%</span>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-progress" style="width: 85%"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                
+                <div class="mt-12">
+                    <h3 class="text-2xl font-bold mb-8 text-center">Autres Technologies</h3>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+                        <div class="text-center p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors">
+                            <i class="fab fa-node-js text-4xl text-green-600 mb-2"></i>
+                            <p class="font-medium">Node.js</p>
+                        </div>
+                        <div class="text-center p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors">
+                            <i class="fas fa-database text-4xl text-blue-600 mb-2"></i>
+                            <p class="font-medium">PostgreSQL</p>
+                        </div>
+                        <div class="text-center p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors">
+                            <i class="fab fa-docker text-4xl text-blue-500 mb-2"></i>
+                            <p class="font-medium">Docker</p>
+                        </div>
+                        <div class="text-center p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors">
+                            <i class="fas fa-robot text-4xl text-orange-600 mb-2"></i>
+                            <p class="font-medium">Arduino</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
+    <div id="contact" class="page">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+            <h2 class="text-4xl font-bold text-center mb-16 bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">Contactez-moi</h2>
+            
+            <div class="max-w-4xl mx-auto">
+                <div class="bg-white rounded-3xl shadow-2xl p-8">
+                    <div class="text-center mb-12">
+                        <p class="text-xl text-gray-600">
+                            Vous avez un projet en tête ? N'hésitez pas à me contacter !
+                        </p>
+                    </div>
+                    
+                    <div class="grid md:grid-cols-2 gap-8">
+                        <a href="mailto:komanboni30@gmail.com" class="group">
+                            <div class="bg-gradient-to-br from-red-400 to-pink-500 rounded-2xl p-6 text-white card-hover">
+                                <div class="flex items-center mb-4">
+                                    <i class="fas fa-envelope text-3xl mr-4"></i>
+                                    <h3 class="text-xl font-bold">Email</h3>
+                                </div>
+                                <p class="group-hover:underline">komanboni30@gmail.com</p>
+                            </div>
+                        </a>
+                        
+                        
+                        <a href="https://www.linkedin.com/in/koman-boni-787303293/" target="_blank" class="group">
+                            <div class="bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl p-6 text-white card-hover">
+                                <div class="flex items-center mb-4">
+                                    <i class="fab fa-linkedin text-3xl mr-4"></i>
+                                    <h3 class="text-xl font-bold">LinkedIn</h3>
+                                </div>
+                                <p class="group-hover:underline">linkedin.com/in/koman-boni-787303293/</p>
+                            </div>
+                        </a>
+                        
+                        
+                        <a href="https://github.com/KomanBoni" target="_blank" class="group">
+                            <div class="bg-gradient-to-br from-gray-700 to-gray-800 rounded-2xl p-6 text-white card-hover">
+                                <div class="flex items-center mb-4">
+                                    <i class="fab fa-github text-3xl mr-4"></i>
+                                    <h3 class="text-xl font-bold">GitHub</h3>
+                                </div>
+                                <p class="group-hover:underline">github.com/KomanBoni</p>
+                            </div>
+                        </a>
+                        
+                        
+                        <a href="https://gitlab.com/KomanBoni" target="_blank" class="group">
+                            <div class="bg-gradient-to-br from-orange-500 to-red-500 rounded-2xl p-6 text-white card-hover">
+                                <div class="flex items-center mb-4">
+                                    <i class="fab fa-gitlab text-3xl mr-4"></i>
+                                    <h3 class="text-xl font-bold">GitLab</h3>
+                                </div>
+                                <p class="group-hover:underline">gitlab.com/KomanBoni</p>
+                            </div>
+                        </a>
+                    </div>
+                    
+                    <div class="mt-12 text-center">
+                        <div class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-purple-500 to-blue-500 rounded-full mb-4">
+                            <i class="fas fa-handshake text-white text-2xl"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold mb-4">Collaborons ensemble !</h3>
+                        <p class="text-gray-600 max-w-2xl mx-auto">
+                            Je suis toujours ouvert aux nouvelles opportunités et collaborations. 
+                            Que ce soit pour un stage, un projet freelance ou simplement pour échanger sur le développement web.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
+    <footer class="bg-gray-900 text-white py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center">
+                <h3 class="text-2xl font-bold mb-4 bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">
+                    Boni Koman
+                </h3>
+                <p class="text-gray-400 mb-6">Développeur Web Full-Stack | Étudiant WebTech</p>
+                
+                <div class="flex justify-center space-x-6 mb-8">
+                    <a href="https://linkedin.com/in/bonikoman" target="_blank" class="text-gray-400 hover:text-blue-400 transition-colors">
+                        <i class="fab fa-linkedin text-2xl"></i>
+                    </a>
+                    <a href="https://github.com/KomanBoni" target="_blank" class="text-gray-400 hover:text-gray-300 transition-colors">
+                        <i class="fab fa-github text-2xl"></i>
+                    </a>
+                    <a href="https://gitlab.com/KomanBoni" target="_blank" class="text-gray-400 hover:text-orange-400 transition-colors">
+                        <i class="fab fa-gitlab text-2xl"></i>
+                    </a>
+                    <a href="mailto:komanboni30@gmail.com" class="text-gray-400 hover:text-red-400 transition-colors">
+                        <i class="fas fa-envelope text-2xl"></i>
+                    </a>
+                </div>
+                
+                <div class="border-t border-gray-800 pt-8">
+                    <p class="text-gray-500">&copy; 2025 Boni Koman. Tous droits réservés.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        
+        let currentSlide = 0;
+        const totalSlides = 3;
+        
+        
+        const hamburger = document.getElementById('hamburger');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const closeMenu = document.getElementById('close-menu');
+        
+        hamburger.addEventListener('click', () => {
+            hamburger.classList.toggle('active');
+            mobileMenu.classList.toggle('active');
+        });
+        
+        closeMenu.addEventListener('click', () => {
+            hamburger.classList.remove('active');
+            mobileMenu.classList.remove('active');
+        });
+        
+        
+        function showPage(pageId) {
+            
+            const pages = document.querySelectorAll('.page');
+            pages.forEach(page => {
+                page.classList.remove('active');
+            });
+            
+            
+            document.getElementById(pageId).classList.add('active');
+            
+            
+            hamburger.classList.remove('active');
+            mobileMenu.classList.remove('active');
+            
+            
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+        
+        
+        function showSlide(n) {
+            const slides = document.querySelectorAll('.carousel-item');
+            const indicators = document.querySelectorAll('.indicator');
+            
+            if (n >= totalSlides) currentSlide = 0;
+            if (n < 0) currentSlide = totalSlides - 1;
+            
+            slides.forEach(slide => slide.classList.remove('active'));
+            indicators.forEach(indicator => {
+                indicator.classList.remove('bg-purple-600');
+                indicator.classList.add('bg-gray-300');
+            });
+            
+            slides[currentSlide].classList.add('active');
+            indicators[currentSlide].classList.remove('bg-gray-300');
+            indicators[currentSlide].classList.add('bg-purple-600');
+        }
+        
+        function nextSlide() {
+            currentSlide++;
+            showSlide(currentSlide);
+        }
+        
+        function prevSlide() {
+            currentSlide--;
+            showSlide(currentSlide);
+        }
+        
+        function goToSlide(n) {
+            currentSlide = n;
+            showSlide(currentSlide);
+        }
+        
+        
+        setInterval(nextSlide, 5000);
+        
+        
+        function animateSkillBars() {
+            const skillBars = document.querySelectorAll('.skill-progress');
+            skillBars.forEach(bar => {
+                const width = bar.style.width;
+                bar.style.width = '0%';
+                setTimeout(() => {
+                    bar.style.width = width;
+                }, 500);
+            });
+        }
+        
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting && entry.target.id === 'competences') {
+                    animateSkillBars();
+                }
+            });
+        });
+        
+        
+        observer.observe(document.getElementById('competences'));
+        
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            
+            setTimeout(animateSkillBars, 1000);
+        });
+        
+        
+        document.addEventListener('click', (e) => {
+            if (!mobileMenu.contains(e.target) && !hamburger.contains(e.target)) {
+                hamburger.classList.remove('active');
+                mobileMenu.classList.remove('active');
+            }
+        });
+    </script>
+</body>
+</html>
