@@ -1,880 +1,1319 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portfolio - Boni Koman</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
-        
-        * {
-            font-family: 'Inter', sans-serif;
-        }
-        
-        .gradient-bg {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        }
-        
-        .card-hover {
-            transition: all 0.3s ease;
-        }
-        
-        .card-hover:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-        }
-        
-        .skill-bar {
-            position: relative;
-            background: #e5e7eb;
-            border-radius: 50px;
-            height: 12px;
-            overflow: hidden;
-        }
-        
-        .skill-progress {
-            height: 100%;
-            background: linear-gradient(90deg, #667eea, #764ba2);
-            border-radius: 50px;
-            transition: width 2s ease-in-out;
-        }
-        
-        .carousel-container {
-            position: relative;
-            overflow: hidden;
-            border-radius: 20px;
-        }
-        
-        .carousel-item {
-            display: none;
-            animation: fadeIn 0.5s ease-in-out;
-        }
-        
-        .carousel-item.active {
-            display: block;
-        }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; transform: scale(0.95); }
-            to { opacity: 1; transform: scale(1); }
-        }
-        
-        .hamburger {
-            cursor: pointer;
-            transition: transform 0.3s ease;
-        }
-        
-        .hamburger.active {
-            transform: rotate(90deg);
-        }
-        
-        .mobile-menu {
-            transform: translateX(100%);
-            transition: transform 0.3s ease;
-        }
-        
-        .mobile-menu.active {
-            transform: translateX(0);
-        }
-        
-        .page {
-            display: none;
-            min-height: calc(100vh - 120px);
-        }
-        
-        .page.active {
-            display: block;
-            animation: slideIn 0.3s ease-out;
-        }
-        
-        @keyframes slideIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
-        .floating-elements {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-            z-index: -1;
-        }
-        
-        .floating-elements::before,
-        .floating-elements::after {
-            content: '';
-            position: absolute;
-            width: 200px;
-            height: 200px;
-            background: linear-gradient(45deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
-            border-radius: 50%;
-            animation: float 6s ease-in-out infinite;
-        }
-        
-        .floating-elements::before {
-            top: 10%;
-            left: 10%;
-            animation-delay: 0s;
-        }
-        
-        .floating-elements::after {
-            bottom: 10%;
-            right: 10%;
-            animation-delay: 3s;
-        }
-        
-        @keyframes float {
-            0%, 100% { transform: translateY(0px) rotate(0deg); }
-            50% { transform: translateY(-20px) rotate(180deg); }
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Portfolio de Boni Koman, développeur web full-stack et étudiant WebTech." />
+  <title>Boni Koman | Portfolio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    :root {
+      --ink: #101522;
+      --muted: #667085;
+      --line: rgba(16, 21, 34, .12);
+      --paper: #f7f4ec;
+      --panel: rgba(255, 255, 255, .76);
+      --night: #121726;
+      --blue: #2563eb;
+      --green: #0f9f6e;
+      --coral: #f05252;
+      --gold: #d97706;
+      --cyan: #0891b2;
+      --shadow: 0 24px 80px rgba(16, 21, 34, .13);
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--ink);
+      background: var(--paper);
+      letter-spacing: 0;
+    }
+
+    button, a { font: inherit; }
+    a { color: inherit; text-decoration: none; }
+    img { display: block; max-width: 100%; }
+
+    .site-shell {
+      min-height: 100vh;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 78% 10%, rgba(37, 99, 235, .15), transparent 28rem),
+        radial-gradient(circle at 10% 42%, rgba(15, 159, 110, .16), transparent 24rem),
+        linear-gradient(180deg, #f8f5ef 0%, #eef7f4 44%, #f8f5ef 100%);
+    }
+
+    .nav {
+      position: fixed;
+      inset: 16px 18px auto;
+      z-index: 30;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 10px 10px 10px 18px;
+      border: 1px solid rgba(255,255,255,.58);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, .73);
+      box-shadow: 0 14px 50px rgba(16, 21, 34, .12);
+      backdrop-filter: blur(18px);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+      font-weight: 900;
+      white-space: nowrap;
+    }
+
+    .brand-mark {
+      display: grid;
+      place-items: center;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      color: #fff;
+      background: conic-gradient(from 220deg, var(--blue), var(--green), var(--gold), var(--coral), var(--blue));
+      box-shadow: inset 0 0 0 2px rgba(255,255,255,.42);
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 0;
+      margin: 0;
+      list-style: none;
+    }
+
+    .nav-links a {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      min-height: 38px;
+      padding: 0 13px;
+      border-radius: 999px;
+      color: #344054;
+      font-size: 13px;
+      font-weight: 800;
+      transition: background .2s ease, color .2s ease, transform .2s ease;
+    }
+
+    .nav-links a:hover {
+      color: var(--ink);
+      background: rgba(16, 21, 34, .07);
+      transform: translateY(-1px);
+    }
+
+    .nav-links a.active {
+      color: #fff;
+      background: var(--ink);
+      box-shadow: 0 10px 26px rgba(16, 21, 34, .16);
+    }
+
+    .menu-button {
+      display: none;
+      align-items: center;
+      justify-content: center;
+      width: 42px;
+      height: 42px;
+      border: 0;
+      border-radius: 50%;
+      color: #fff;
+      background: var(--ink);
+      cursor: pointer;
+    }
+
+    .hero {
+      position: relative;
+      min-height: 92vh;
+      display: grid;
+      align-items: center;
+      padding: 118px 22px 64px;
+      isolation: isolate;
+    }
+
+    .view-page {
+      display: none;
+    }
+
+    .view-page.active {
+      display: block;
+      animation: pageIn .42s ease both;
+    }
+
+    .hero.view-page.active {
+      display: grid;
+    }
+
+    .content-page {
+      min-height: calc(100vh - 80px);
+      padding-top: 124px;
+      padding-bottom: 72px;
+    }
+
+    @keyframes pageIn {
+      from { opacity: 0; transform: translateY(18px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    #three-hero {
+      position: absolute;
+      inset: 0;
+      z-index: -2;
+      width: 100%;
+      height: 100%;
+      opacity: .84;
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      background: linear-gradient(90deg, rgba(248,245,239,.98) 0%, rgba(248,245,239,.86) 47%, rgba(248,245,239,.36) 100%);
+    }
+
+    .container {
+      width: min(1180px, calc(100% - 36px));
+      margin: 0 auto;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 360px;
+      gap: 50px;
+      align-items: center;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 20px;
+      color: #475467;
+      font-size: 13px;
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+
+    .signal {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 0 0 7px rgba(15, 159, 110, .15);
+    }
+
+    .hero h1 {
+      max-width: 820px;
+      margin: 0;
+      font-size: clamp(54px, 9vw, 118px);
+      line-height: .9;
+      font-weight: 900;
+      letter-spacing: 0;
+    }
+
+    .hero h1 span {
+      display: block;
+      color: transparent;
+      background: linear-gradient(90deg, var(--ink), #1d4ed8 46%, #047857 100%);
+      background-clip: text;
+      -webkit-background-clip: text;
+    }
+
+    .hero-copy {
+      max-width: 660px;
+      margin: 26px 0 0;
+      color: #344054;
+      font-size: clamp(18px, 2.2vw, 24px);
+      line-height: 1.45;
+      font-weight: 600;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 32px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      min-height: 48px;
+      padding: 0 18px;
+      border: 1px solid transparent;
+      border-radius: 8px;
+      font-weight: 900;
+      transition: transform .2s ease, box-shadow .2s ease, background .2s ease;
+    }
+
+    .btn-primary {
+      color: white;
+      background: var(--ink);
+      box-shadow: 0 16px 36px rgba(16, 21, 34, .2);
+    }
+
+    .btn-soft {
+      color: var(--ink);
+      background: rgba(255,255,255,.72);
+      border-color: rgba(16, 21, 34, .12);
+    }
+
+    .btn:hover { transform: translateY(-2px); }
+    .icon { width: 18px; height: 18px; stroke-width: 2.4; }
+
+    .portrait-wrap {
+      position: relative;
+      justify-self: end;
+      width: min(360px, 100%);
+      aspect-ratio: 4 / 5;
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,.6);
+      background: #d8e7e2;
+      box-shadow: var(--shadow);
+      transform: rotate(1.2deg);
+    }
+
+    .portrait-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .portrait-tag {
+      position: absolute;
+      left: 14px;
+      right: 14px;
+      bottom: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      min-height: 48px;
+      padding: 8px 12px;
+      border-radius: 8px;
+      color: #fff;
+      background: rgba(16, 21, 34, .78);
+      backdrop-filter: blur(14px);
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .stats-strip {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1px;
+      margin-top: 54px;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--line);
+      box-shadow: 0 20px 60px rgba(16, 21, 34, .08);
+    }
+
+    .stat {
+      min-height: 106px;
+      padding: 22px;
+      background: rgba(255,255,255,.72);
+      backdrop-filter: blur(14px);
+    }
+
+    .stat strong {
+      display: block;
+      font-size: 30px;
+      font-weight: 900;
+      line-height: 1;
+    }
+
+    .stat span {
+      display: block;
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    section:not(.content-page) {
+      padding: 90px 0;
+      scroll-margin-top: 98px;
+    }
+
+    .section-head {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 30px;
+      margin-bottom: 34px;
+    }
+
+    .section-kicker {
+      margin: 0 0 10px;
+      color: var(--green);
+      font-size: 13px;
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+
+    .section-title {
+      max-width: 760px;
+      margin: 0;
+      font-size: clamp(34px, 5vw, 62px);
+      line-height: .98;
+      font-weight: 900;
+      letter-spacing: 0;
+    }
+
+    .section-copy {
+      max-width: 420px;
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.65;
+      font-weight: 600;
+    }
+
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1.2fr .8fr;
+      gap: 22px;
+      align-items: stretch;
+    }
+
+    .glass-panel {
+      border: 1px solid rgba(255,255,255,.66);
+      border-radius: 8px;
+      background: var(--panel);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(18px);
+    }
+
+    .about-story {
+      padding: clamp(24px, 4vw, 42px);
+    }
+
+    .about-story p {
+      margin: 0 0 18px;
+      color: #344054;
+      font-size: 18px;
+      line-height: 1.75;
+      font-weight: 600;
+    }
+
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 26px;
+    }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      min-height: 34px;
+      padding: 0 12px;
+      border: 1px solid rgba(16, 21, 34, .1);
+      border-radius: 999px;
+      background: rgba(255,255,255,.58);
+      color: #344054;
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .activity-list {
+      display: grid;
+      gap: 12px;
+      padding: 18px;
+    }
+
+    .activity {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-height: 58px;
+      padding: 13px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: rgba(255,255,255,.66);
+      font-weight: 800;
+    }
+
+    .activity i {
+      display: grid;
+      place-items: center;
+      flex: 0 0 36px;
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      color: #fff;
+      background: var(--accent);
+      font-style: normal;
+    }
+
+    .timeline {
+      display: grid;
+      gap: 18px;
+    }
+
+    .experience-item {
+      display: grid;
+      grid-template-columns: 230px minmax(0, 1fr);
+      gap: 24px;
+      padding: 26px;
+      border-left: 6px solid var(--accent);
+    }
+
+    .date {
+      color: var(--accent);
+      font-size: 14px;
+      font-weight: 900;
+    }
+
+    .experience-item h3 {
+      margin: 0 0 6px;
+      font-size: 25px;
+      line-height: 1.15;
+    }
+
+    .role {
+      margin: 0 0 14px;
+      color: #475467;
+      font-weight: 900;
+    }
+
+    .experience-item p {
+      margin: 0;
+      color: #475467;
+      line-height: 1.65;
+      font-weight: 600;
+    }
+
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .project-card {
+      position: relative;
+      overflow: hidden;
+      min-height: 456px;
+      border: 1px solid rgba(255,255,255,.7);
+      border-radius: 8px;
+      background: rgba(255,255,255,.78);
+      box-shadow: 0 18px 60px rgba(16, 21, 34, .1);
+      transition: transform .24s ease, box-shadow .24s ease;
+    }
+
+    .project-card:hover {
+      transform: translateY(-7px);
+      box-shadow: 0 28px 80px rgba(16, 21, 34, .16);
+    }
+
+    .project-image {
+      height: 210px;
+      background: #d9e5df;
+      overflow: hidden;
+    }
+
+    .project-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform .55s ease;
+    }
+
+    .project-card:hover .project-image img { transform: scale(1.06); }
+
+    .project-body {
+      padding: 21px;
+    }
+
+    .project-body h3 {
+      margin: 0 0 10px;
+      font-size: 22px;
+    }
+
+    .project-body p {
+      min-height: 92px;
+      margin: 0;
+      color: #526174;
+      line-height: 1.55;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .tag-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 18px;
+    }
+
+    .tag {
+      padding: 7px 9px;
+      border-radius: 8px;
+      color: var(--accent);
+      background: color-mix(in srgb, var(--accent) 12%, white);
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    .skills-layout {
+      display: grid;
+      grid-template-columns: .9fr 1.1fr;
+      gap: 22px;
+      align-items: start;
+    }
+
+    .skill-radar {
+      position: relative;
+      min-height: 420px;
+      padding: 30px;
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+    }
+
+    .orbit {
+      position: absolute;
+      border: 1px dashed rgba(16, 21, 34, .15);
+      border-radius: 50%;
+      animation: spin 24s linear infinite;
+    }
+
+    .orbit.one { width: 300px; height: 300px; }
+    .orbit.two { width: 220px; height: 220px; animation-duration: 18s; animation-direction: reverse; }
+    .orbit.three { width: 140px; height: 140px; animation-duration: 13s; }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .radar-core {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      place-items: center;
+      width: 156px;
+      height: 156px;
+      border-radius: 50%;
+      color: #fff;
+      text-align: center;
+      background: linear-gradient(135deg, var(--ink), #1d4ed8 54%, #047857);
+      box-shadow: 0 28px 80px rgba(37, 99, 235, .25);
+      font-weight: 900;
+    }
+
+    .skill-bars {
+      display: grid;
+      gap: 15px;
+      padding: 26px;
+    }
+
+    .skill-line {
+      display: grid;
+      gap: 9px;
+    }
+
+    .skill-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      font-weight: 900;
+    }
+
+    .bar {
+      height: 12px;
+      overflow: hidden;
+      border-radius: 999px;
+      background: rgba(16, 21, 34, .09);
+    }
+
+    .bar span {
+      display: block;
+      width: var(--level);
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, var(--accent), #101522);
+      transform-origin: left;
+      animation: grow 1.2s ease both;
+    }
+
+    @keyframes grow {
+      from { transform: scaleX(0); }
+      to { transform: scaleX(1); }
+    }
+
+    .travel-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+    }
+
+    .travel-card {
+      min-height: 360px;
+      overflow: hidden;
+      border-radius: 8px;
+      background: var(--night);
+      color: #fff;
+    }
+
+    .travel-card img {
+      width: 100%;
+      height: 190px;
+      object-fit: cover;
+      opacity: .9;
+    }
+
+    .travel-card div { padding: 22px; }
+    .travel-card h3 { margin: 0 0 8px; font-size: 24px; }
+    .travel-card p { margin: 0; color: rgba(255,255,255,.76); line-height: 1.6; font-weight: 600; }
+
+    .contact-panel {
+      display: grid;
+      grid-template-columns: .9fr 1.1fr;
+      gap: 24px;
+      padding: clamp(24px, 4vw, 42px);
+      background: #101522;
+      color: #fff;
+    }
+
+    .contact-panel h2 {
+      margin: 0 0 16px;
+      font-size: clamp(34px, 5vw, 58px);
+      line-height: .98;
+      letter-spacing: 0;
+    }
+
+    .contact-panel p {
+      margin: 0;
+      color: rgba(255,255,255,.72);
+      line-height: 1.7;
+      font-weight: 600;
+    }
+
+    .contact-links {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      align-content: start;
+    }
+
+    .contact-link {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-height: 82px;
+      padding: 16px;
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: 8px;
+      background: rgba(255,255,255,.07);
+      font-weight: 900;
+      transition: background .2s ease, transform .2s ease;
+      min-width: 0;
+    }
+
+    .contact-link:hover {
+      background: rgba(255,255,255,.12);
+      transform: translateY(-2px);
+    }
+
+    .contact-link small {
+      display: block;
+      margin-top: 4px;
+      color: rgba(255,255,255,.62);
+      font-size: 12px;
+      overflow-wrap: anywhere;
+    }
+
+    footer {
+      padding: 30px 0 50px;
+      color: #667085;
+      text-align: center;
+      font-weight: 700;
+    }
+
+    [data-reveal] {
+      opacity: 0;
+      transform: translateY(22px);
+      transition: opacity .65s ease, transform .65s ease;
+    }
+
+    [data-reveal].visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @media (max-width: 940px) {
+      .nav { border-radius: 24px; }
+      .menu-button { display: inline-flex; }
+      .nav-links {
+        position: absolute;
+        top: calc(100% + 10px);
+        right: 0;
+        display: none;
+        width: min(320px, calc(100vw - 36px));
+        padding: 10px;
+        border: 1px solid rgba(255,255,255,.58);
+        border-radius: 8px;
+        background: rgba(255,255,255,.94);
+        box-shadow: var(--shadow);
+      }
+      .nav-links.open { display: grid; }
+      .nav-links a { justify-content: flex-start; }
+      .hero-grid, .about-grid, .skills-layout, .contact-panel { grid-template-columns: 1fr; }
+      .portrait-wrap { justify-self: start; width: min(320px, 100%); }
+      .stats-strip { grid-template-columns: repeat(2, 1fr); }
+      .projects-grid, .travel-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .experience-item { grid-template-columns: 1fr; }
+      .section-head { align-items: start; flex-direction: column; }
+    }
+
+    @media (max-width: 640px) {
+      .container { width: min(100% - 28px, 1180px); }
+      .hero { min-height: auto; padding-top: 108px; }
+      .hero::after { background: rgba(248,245,239,.88); }
+      .hero-actions .btn { width: 100%; }
+      .stats-strip, .projects-grid, .travel-grid, .contact-links { grid-template-columns: 1fr; }
+      .stat { min-height: auto; }
+      section { padding: 68px 0; }
+      .project-body p { min-height: auto; }
+      .contact-link { min-height: 74px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        scroll-behavior: auto !important;
+        transition-duration: .01ms !important;
+      }
+    }
+  </style>
 </head>
-<body class="bg-gray-50 text-gray-800">
-    <header class="bg-white shadow-lg sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center py-4">
-                <div class="flex items-center">
-                    <h1 class="text-2xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
-                        Boni Koman
-                    </h1>
-                </div>
-              
-                <div>
-                    <button id="hamburger" class="hamburger text-gray-600 hover:text-purple-600 focus:outline-none">
-                        <i class="fas fa-bars text-2xl"></i>
-                    </button>
-                </div>
-            </div>
-        </div>
-        
-              <div id="mobile-menu" class="mobile-menu fixed top-0 right-0 h-full w-80 bg-white shadow-2xl z-50">
-            <div class="p-6">
-                <button id="close-menu" class="float-right text-gray-600 hover:text-purple-600 mb-8">
-                    <i class="fas fa-times text-2xl"></i>
-                </button>
-                <div class="mt-12 space-y-6">
-                    <button onclick="showPage('accueil')" class="block w-full text-left text-gray-600 hover:text-purple-600 font-medium py-4 px-4 rounded-lg hover:bg-purple-50 transition-all text-lg">
-                        <i class="fas fa-home mr-3"></i>Accueil
-                    </button>
-                    <button onclick="showPage('apropos')" class="block w-full text-left text-gray-600 hover:text-purple-600 font-medium py-4 px-4 rounded-lg hover:bg-purple-50 transition-all text-lg">
-                        <i class="fas fa-user mr-3"></i>À propos
-                    </button>
-                    <button onclick="showPage('experience')" class="block w-full text-left text-gray-600 hover:text-purple-600 font-medium py-4 px-4 rounded-lg hover:bg-purple-50 transition-all text-lg">
-                        <i class="fas fa-briefcase mr-3"></i>Expérience
-                    </button>
-                    <button onclick="showPage('projets')" class="block w-full text-left text-gray-600 hover:text-purple-600 font-medium py-4 px-4 rounded-lg hover:bg-purple-50 transition-all text-lg">
-                        <i class="fas fa-code mr-3"></i>Projets
-                    </button>
-                    <button onclick="showPage('competences')" class="block w-full text-left text-gray-600 hover:text-purple-600 font-medium py-4 px-4 rounded-lg hover:bg-purple-50 transition-all text-lg">
-                        <i class="fas fa-cogs mr-3"></i>Compétences
-                    </button>
-                    <button onclick="showPage('contact')" class="block w-full text-left text-gray-600 hover:text-purple-600 font-medium py-4 px-4 rounded-lg hover:bg-purple-50 transition-all text-lg">
-                        <i class="fas fa-envelope mr-3"></i>Contact
-                    </button>
-                </div>
-                
-                <div class="mt-12 pt-8 border-t border-gray-200">
-                    <p class="text-gray-500 text-sm mb-4">Retrouvez-moi sur :</p>
-                    <div class="flex space-x-4">
-                        <a href="https://linkedin.com/in/bonikoman" target="_blank" class="text-blue-600 hover:text-blue-700">
-                            <i class="fab fa-linkedin text-xl"></i>
-                        </a>
-                        <a href="https://github.com/KomanBoni" target="_blank" class="text-gray-700 hover:text-gray-800">
-                            <i class="fab fa-github text-xl"></i>
-                        </a>
-                        <a href="https://gitlab.com/KomanBoni" target="_blank" class="text-orange-600 hover:text-orange-700">
-                            <i class="fab fa-gitlab text-xl"></i>
-                        </a>
-                        <a href="mailto:komanboni30@gmail.com" class="text-red-600 hover:text-red-700">
-                            <i class="fas fa-envelope text-xl"></i>
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </header>
+<body>
+  <div id="root"></div>
 
-    
-    <div id="accueil" class="page active">
-        <div class="relative">
-            <div class="floating-elements"></div>
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-                <div class="text-center mb-16">
-                    <h1 class="text-5xl md:text-7xl font-bold mb-6">
-                        <span class="bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
-                            Boni Koman
-                        </span>
-                    </h1>
-                    <p class="text-xl md:text-2xl text-gray-600 font-light">
-                        Développeur Web Full-Stack | Étudiant WebTech
-                    </p>
-                </div>
-                
-                <div class="max-w-4xl mx-auto">
-                    <div class="carousel-container bg-white rounded-3xl shadow-2xl p-8">
-                        <div class="relative">
-                            <div class="carousel-item active" id="slide-0">
-                                <div class="flex flex-col md:flex-row items-center gap-8">
-                                    <div class="md:w-1/2">
-                                        <img src="https://barcelonesite.fr/images/barcelona_2.jpg" alt="Barcelone" class="w-full h-64 object-cover rounded-2xl shadow-lg">
-                                    </div>
-                                    <div class="md:w-1/2 text-center md:text-left">
-                                        <div class="flex items-center justify-center md:justify-start mb-4">
-                                            <i class="fas fa-plane text-purple-600 text-2xl mr-3"></i>
-                                            <h3 class="text-3xl font-bold text-gray-800">Barcelone</h3>
-                                        </div>
-                                        <h4 class="text-xl font-semibold text-purple-600 mb-3">Formation E-commerce</h4>
-                                        <p class="text-gray-600 leading-relaxed">Formation en React au campus partenaire Pompeu Fabra , et visites d'entreprises. Une expérience enrichissante en 2024.</p>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            
-                            <div class="carousel-item" id="slide-1">
-                                <div class="flex flex-col md:flex-row items-center gap-8">
-                                    <div class="md:w-1/2">
-                                        <img src="https://media.routard.com/image/88/2/ha-penny-bridge.1607882.jpg" alt="Dublin" class="w-full h-64 object-cover rounded-2xl shadow-lg">
-                                    </div>
-                                    <div class="md:w-1/2 text-center md:text-left">
-                                        <div class="flex items-center justify-center md:justify-start mb-4">
-                                            <i class="fas fa-plane text-green-600 text-2xl mr-3"></i>
-                                            <h3 class="text-3xl font-bold text-gray-800">Dublin</h3>
-                                        </div>
-                                        <h4 class="text-xl font-semibold text-green-600 mb-3">Formation Front-End</h4>
-                                        <p class="text-gray-600 leading-relaxed">Formation avancée en HTML, CSS et JavaScript au campus partenaire (DCU Saint Patrick). Expérience réalisée en 2023.</p>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="carousel-item" id="slide-2">
-                                <div class="flex flex-col md:flex-row items-center gap-8">
-                                    <div class="md:w-1/2">
-                                        <img src="https://images.unsplash.com/photo-1517935706615-2717063c2225?w=800&h=400&fit=crop" alt="Canada" class="w-full h-64 object-cover rounded-2xl shadow-lg">
-                                    </div>
-                                    <div class="md:w-1/2 text-center md:text-left">
-                                        <div class="flex items-center justify-center md:justify-start mb-4">
-                                            <i class="fas fa-plane text-red-600 text-2xl mr-3"></i>
-                                            <h3 class="text-3xl font-bold text-gray-800">Canada</h3>
-                                        </div>
-                                        <h4 class="text-xl font-semibold text-red-600 mb-3">À venir - Formation Jeu Vidéo</h4>
-                                        <p class="text-gray-600 leading-relaxed">Formation en Unity et C# chez un campus partenaire à Montréal. Prochaine aventure en préparation !</p>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            
-                            <button onclick="prevSlide()" class="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white hover:bg-gray-100 rounded-full p-3 shadow-lg transition-all">
-                                <i class="fas fa-chevron-left text-gray-600"></i>
-                            </button>
-                            <button onclick="nextSlide()" class="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white hover:bg-gray-100 rounded-full p-3 shadow-lg transition-all">
-                                <i class="fas fa-chevron-right text-gray-600"></i>
-                            </button>
-                        </div>
-                        
-                        
-                        <div class="flex justify-center mt-6 space-x-2">
-                            <button onclick="goToSlide(0)" class="indicator w-3 h-3 rounded-full bg-purple-600 transition-all"></button>
-                            <button onclick="goToSlide(1)" class="indicator w-3 h-3 rounded-full bg-gray-300 hover:bg-gray-400 transition-all"></button>
-                            <button onclick="goToSlide(2)" class="indicator w-3 h-3 rounded-full bg-gray-300 hover:bg-gray-400 transition-all"></button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+  <script type="text/babel">
+    const { useEffect, useState } = React;
 
-    
-    <div id="apropos" class="page">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-            <h2 class="text-4xl font-bold text-center mb-16 bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">À propos de moi</h2>
-            
-            <div class="bg-white rounded-3xl shadow-2xl p-8 mb-12">
-                <div class="flex flex-col md:flex-row items-center gap-8">
-                    <div class="md:w-1/3">
-                        <div class="w-64 h-64 mx-auto bg-gradient-to-br from-purple-400 to-blue-500 rounded-full flex items-center justify-center shadow-2xl">
-                          <img src="assets/Photo profil.png" alt="Boni Koman" class="w-full h-full object-cover rounded-full">
-            
-                        </div>
-                    </div>
-                    <div class="md:w-2/3">
-                        <h3 class="text-2xl font-bold mb-4">Développeur passionné</h3>
-                        <p class="text-gray-600 leading-relaxed mb-6">
-                            Étudiant en développement web chez WebTech, je suis passionné par la création d'applications web modernes et innovantes. 
-                            Mon parcours m'a mené à travers différentes technologies et expériences internationales qui ont enrichi ma vision du développement.
-                        </p>
-                        <p class="text-gray-600 leading-relaxed">
-                            Toujours à la recherche de nouveaux défis, j'aime combiner créativité et technique pour créer des solutions qui font la différence.
-                        </p>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="grid md:grid-cols-2 gap-8">
-                
-                <div class="bg-white rounded-3xl shadow-xl p-8 card-hover">
-                    <h3 class="text-2xl font-bold mb-6 text-purple-600">
-                        <i class="fas fa-rocket mr-3"></i>Mes Activités
-                    </h3>
-                    <div class="space-y-4">
-                        <div class="flex items-center p-3 bg-purple-50 rounded-lg">
-                            <i class="fas fa-futbol text-purple-600 mr-3"></i>
-                            <span>Football</span>
-                        </div>
-                        <div class="flex items-center p-3 bg-blue-50 rounded-lg">
-                            <i class="fas fa-graduation-cap text-blue-600 mr-3"></i>
-                            <span>Formation WebTech</span>
-                        </div>
-                        <div class="flex items-center p-3 bg-green-50 rounded-lg">
-                            <i class="fas fa-code text-green-600 mr-3"></i>
-                            <span>Participation aux hackathons DBH</span>
-                        </div>
-                        <div class="flex items-center p-3 bg-yellow-50 rounded-lg">
-                            <i class="fas fa-globe text-yellow-600 mr-3"></i>
-                            <span>Développement site personnel</span>
-                        </div>
-                    </div>
-                </div>
-                
-                
-                <div class="bg-white rounded-3xl shadow-xl p-8 card-hover">
-                    <h3 class="text-2xl font-bold mb-6 text-blue-600">
-                        <i class="fas fa-heart mr-3"></i>Mes Hobbies
-                    </h3>
-                    <div class="space-y-4">
-                        <div class="flex items-center p-3 bg-red-50 rounded-lg">
-                            <i class="fas fa-plane text-red-600 mr-3"></i>
-                            <span>Voyage</span>
-                        </div>
-                        <div class="flex items-center p-3 bg-green-50 rounded-lg">
-                            <i class="fas fa-dumbbell text-green-600 mr-3"></i>
-                            <span>Sport</span>
-                        </div>
-                        <div class="flex items-center p-3 bg-purple-50 rounded-lg">
-                            <i class="fas fa-film text-purple-600 mr-3"></i>
-                            <span>Cinéma</span>
-                        </div>
-                        <div class="flex items-center p-3 bg-blue-50 rounded-lg">
-                            <i class="fas fa-gamepad text-blue-600 mr-3"></i>
-                            <span>Jeux vidéo</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+    const nav = [
+      ["accueil", "Accueil", "Home"],
+      ["profil", "Profil", "UserRound"],
+      ["experience", "Expérience", "BriefcaseBusiness"],
+      ["projets", "Projets", "PanelsTopLeft"],
+      ["competences", "Skills", "Sparkles"],
+      ["voyages", "Voyages", "Plane"],
+      ["contact", "Contact", "Send"]
+    ];
 
-    
-    <div id="experience" class="page">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-            <h2 class="text-4xl font-bold text-center mb-16 bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">Expérience Professionnelle</h2>
-            
-            <div class="space-y-8">
-                
-                <div class="bg-white rounded-3xl shadow-2xl p-8 card-hover">
-                    <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
-                        <div>
-                            <h3 class="text-2xl font-bold text-gray-800 mb-2">Stage QzicMe</h3>
-                            <p class="text-purple-600 font-semibold text-lg">Développeur Mobile React Native</p>
-                        </div>
-                        <div class="text-right">
-                            <p class="text-gray-600 font-medium">03/03/2025 - 01/05/2025</p>
-                            <span class="inline-block bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium mt-2">Terminé</span>
-                        </div>
-                    </div>
-                    <div class="border-l-4 border-purple-500 pl-6">
-                        <p class="text-gray-600 leading-relaxed">
-                            Contribution au développement d'une application mobile avec React Native. 
-                            Participation active au cycle de développement complet de l'application.
-                        </p>
-                        <div class="mt-4 flex flex-wrap gap-2">
-                            <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm">React Native</span>
-                            <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm">Mobile Development</span>
-                        </div>
-                    </div>
-                </div>
-                
-                
-                <div class="bg-white rounded-3xl shadow-2xl p-8 card-hover">
-                    <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
-                        <div>
-                            <h3 class="text-2xl font-bold text-gray-800 mb-2">Transactis (Société Générale)</h3>
-                            <p class="text-blue-600 font-semibold text-lg">Développeur Python - Automatisation</p>
-                        </div>
-                        <div class="text-right">
-                            <p class="text-gray-600 font-medium">01/03/2024 - 01/06/2024</p>
-                            <span class="inline-block bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium mt-2">Terminé</span>
-                        </div>
-                    </div>
-                    <div class="border-l-4 border-blue-500 pl-6">
-                        <p class="text-gray-600 leading-relaxed mb-4">
-                            Développement de scripts en Python pour automatiser la récupération et le traitement des flux bancaires. 
-                            Travail en coordination avec les équipes fonctionnelles et techniques pour assurer la bonne intégration des flux dans le système cible.
-                        </p>
-                        <div class="grid md:grid-cols-2 gap-4 text-sm text-gray-600">
-                            <div class="flex items-center">
-                                <i class="fas fa-check-circle text-green-500 mr-2"></i>
-                                Automatisation des processus bancaires
-                            </div>
-                            <div class="flex items-center">
-                                <i class="fas fa-check-circle text-green-500 mr-2"></i>
-                                Coordination avec équipes techniques
-                            </div>
-                            <div class="flex items-center">
-                                <i class="fas fa-check-circle text-green-500 mr-2"></i>
-                                Traitement de flux de données
-                            </div>
-                            <div class="flex items-center">
-                                <i class="fas fa-check-circle text-green-500 mr-2"></i>
-                                Intégration système
-                            </div>
-                        </div>
-                        <div class="mt-4 flex flex-wrap gap-2">
-                            <span class="bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full text-sm">Python</span>
-                            <span class="bg-red-100 text-red-800 px-3 py-1 rounded-full text-sm">Automatisation</span>
-                            <span class="bg-purple-100 text-purple-800 px-3 py-1 rounded-full text-sm">Flux bancaires</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+    const stats = [
+      ["2025-2026", "Alternance Fullstack à Lille"],
+      ["6", "Projets présentés"],
+      ["3", "Expériences internationales"],
+      ["IA & web", "Fullstack, Python, Machine Learning"]
+    ];
 
-    
-    <div id="projets" class="page">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-            <h2 class="text-4xl font-bold text-center mb-16 bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">Mes Projets</h2>
-            
-            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <!-- Projet TemoinX -->
-                <div class="bg-white rounded-3xl shadow-2xl p-6 card-hover">
-                    <div class="h-48 bg-gradient-to-br from-purple-400 to-pink-400 rounded-2xl mb-6 flex items-center justify-center">
-                        <img src="assets/Temoin X.png" alt="TemoinX" class="w-full h-full object-cover rounded-2xl">
-                    </div>
-                    <h3 class="text-xl font-bold mb-3">TemoinX</h3>
-                    <p class="text-gray-600 text-sm mb-4">
-                        Application de signalement via carte interactive développée lors d'un code camp d'une semaine. 
-                        Système d'authentification et récupération de statistiques.
-                    </p>
-                    <div class="flex flex-wrap gap-2 mb-4">
-                        <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs">React.js</span>
-                        <span class="bg-green-100 text-green-800 px-2 py-1 rounded text-xs">Node.js</span>
-                        <span class="bg-purple-100 text-purple-800 px-2 py-1 rounded text-xs">PostgreSQL</span>
-                        <span class="bg-yellow-100 text-yellow-800 px-2 py-1 rounded text-xs">Google Maps API</span>
-                    </div>
-                </div>
-                
-                
-                <div class="bg-white rounded-3xl shadow-2xl p-6 card-hover">
-                    <div class="h-48 bg-gradient-to-br from-blue-400 to-cyan-400 rounded-2xl mb-6 flex items-center justify-center">
-                        <img src="assets/arduino.jpg" alt="Usine Connectée" class="w-full h-full object-cover rounded-2xl">
-                    </div>
-                    <h3 class="text-xl font-bold mb-3">Usine Connectée</h3>
-                    <p class="text-gray-600 text-sm mb-4">
-                        Projet de groupe, création d'une usine connectée en Arduino avec une balance, 
-                        un micro-onde, une interface de gestion, etc...
-                    </p>
-                    <div class="flex flex-wrap gap-2 mb-4">
-                        <span class="bg-red-100 text-red-800 px-2 py-1 rounded text-xs">Arduino</span>
-                        <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs">C++</span>
-                    </div>
-                </div>
-                
+    const activities = [
+      ["Football", "Trophy", "#2563eb"],
+      ["Formation WebTech", "GraduationCap", "#0f9f6e"],
+      ["Hackathons DBH", "Code2", "#d97706"],
+      ["Sites personnels", "Globe2", "#0891b2"],
+      ["Sport", "Dumbbell", "#f05252"],
+      ["Jeux vidéo", "Gamepad2", "#475467"]
+    ];
 
-                <div class="bg-white rounded-3xl shadow-2xl p-6 card-hover">
-                    <div class="h-48 bg-gradient-to-br from-green-400 to-emerald-400 rounded-2xl mb-6 flex items-center justify-center">
-                        <img src="assets/Django.jpg" alt="App Django Football" class="w-full h-full object-cover rounded-2xl">
-                    </div>
-                    <h3 class="text-xl font-bold mb-3">App Django Football</h3>
-                    <p class="text-gray-600 text-sm mb-4">
-                        Application Django développée en 1 semaine lors de la piscine webtech. 
-                        Permet de répertorier des footballeurs et leurs clubs.
-                    </p>
-                    <div class="flex flex-wrap gap-2 mb-4">
-                        <span class="bg-green-100 text-green-800 px-2 py-1 rounded text-xs">Django</span>
-                        <span class="bg-yellow-100 text-yellow-800 px-2 py-1 rounded text-xs">Python</span>
-                    </div>
-                </div>
-                
-                
-                <div class="bg-white rounded-3xl shadow-2xl p-6 card-hover">
-                    <div class="h-48 bg-gradient-to-br from-orange-400 to-red-400 rounded-2xl mb-6 flex items-center justify-center">
-                        <img src="assets/salle de sport.png" alt="App Réservation Sportive" class="w-full h-full object-cover rounded-2xl">
-                    </div>
-                    <h3 class="text-xl font-bold mb-3">App Réservation Sportive</h3>
-                    <p class="text-gray-600 text-sm mb-4">
-                        Application de réservation pour événements sportifs. 
-                        Possibilité de réserver, supprimer ou modifier les réservations.
-                    </p>
-                    <div class="flex flex-wrap gap-2 mb-4">
-                        <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs">Web App</span>
-                        <span class="bg-purple-100 text-purple-800 px-2 py-1 rounded text-xs">Gestion</span>
-                    </div>
-                </div>
-                
-                
-                <div class="bg-white rounded-3xl shadow-2xl p-6 card-hover">
-                    <div class="h-48 bg-gradient-to-br from-purple-400 to-blue-400 rounded-2xl mb-6 flex items-center justify-center">
-                        <img src="assets/Barcelone.png" alt="App E-commerce Barcelona" class="w-full h-full object-cover rounded-2xl">
-                    </div>
-                    <h3 class="text-xl font-bold mb-3">App E-commerce Barcelona</h3>
-                    <p class="text-gray-600 text-sm mb-4">
-                        Application e-commerce pour la vente de produits FC Barcelone X Nike 
-                        développée lors de mon voyage à Barcelone.
-                    </p>
-                    <div class="flex flex-wrap gap-2 mb-4">
-                        <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs">React</span>
-                        <span class="bg-gray-100 text-gray-800 px-2 py-1 rounded text-xs">Docker</span>
-                        <span class="bg-green-100 text-green-800 px-2 py-1 rounded text-xs">API Stripe</span>
-                    </div>
-                </div>
-                
-                
-                <div class="bg-white rounded-3xl shadow-2xl p-6 card-hover">
-                    <div class="h-48 bg-gradient-to-br from-yellow-400 to-orange-400 rounded-2xl mb-6 flex items-center justify-center">
-                        <img src="assets/bleach.png" alt="Jeu d'attaque Bleach" class="w-full h-full object-cover rounded-2xl">
-                    </div>
-                    <h3 class="text-xl font-bold mb-3">Jeu d'attaque Bleach</h3>
-                    <p class="text-gray-600 text-sm mb-4">
-                        Mon premier projet React ! Jeu d'attaque tour par tour avec choix du personnage, 
-                        de l'équipe adverse et des attaques.
-                    </p>
-                    <div class="flex flex-wrap gap-2 mb-4">
-                        <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs">React</span>
-                        <span class="bg-pink-100 text-pink-800 px-2 py-1 rounded text-xs">CSS</span>
-                        <span class="bg-yellow-100 text-yellow-800 px-2 py-1 rounded text-xs">JSON</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+    const experiences = [
+      {
+        date: "2025 - 2026",
+        title: "EPAS ESTICE - Lille",
+        role: "Alternant Développeur Fullstack",
+        color: "#7c3aed",
+        text: "Projet web pour étudiants internationaux, avec conception d'interfaces, développement fullstack et amélioration de l'expérience utilisateur."
+      },
+      {
+        date: "03/03/2025 - 01/05/2025",
+        title: "Stage QzicMe",
+        role: "Développeur Mobile React Native",
+        color: "#2563eb",
+        text: "Contribution au développement d'une application mobile avec React Native et participation active au cycle de développement complet."
+      },
+      {
+        date: "01/03/2024 - 01/06/2024",
+        title: "Transactis, Société Générale",
+        role: "Développeur Python - Automatisation",
+        color: "#0f9f6e",
+        text: "Développement de scripts Python pour automatiser la récupération et le traitement de flux bancaires, avec coordination entre équipes fonctionnelles et techniques."
+      }
+    ];
 
-    
-    <div id="competences" class="page">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-            <h2 class="text-4xl font-bold text-center mb-16 bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">Mes Compétences</h2>
-            
-            <div class="bg-white rounded-3xl shadow-2xl p-8">
-                <div class="grid md:grid-cols-2 gap-8">
-                    <div class="space-y-4">
-                        <div class="flex justify-between items-center">
-                            <span class="font-semibold text-gray-800">HTML / CSS</span>
-                            <span class="text-sm text-gray-600">90%</span>
-                        </div>
-                        <div class="skill-bar">
-                            <div class="skill-progress" style="width: 90%"></div>
-                        </div>
-                    </div>
-                    
-                    
-                    <div class="space-y-4">
-                        <div class="flex justify-between items-center">
-                            <span class="font-semibold text-gray-800">JavaScript</span>
-                            <span class="text-sm text-gray-600">85%</span>
-                        </div>
-                        <div class="skill-bar">
-                            <div class="skill-progress" style="width: 85%"></div>
-                        </div>
-                    </div>
-                    
-                    
-                    <div class="space-y-4">
-                        <div class="flex justify-between items-center">
-                            <span class="font-semibold text-gray-800">ReactJS</span>
-                            <span class="text-sm text-gray-600">80%</span>
-                        </div>
-                        <div class="skill-bar">
-                            <div class="skill-progress" style="width: 80%"></div>
-                        </div>
-                    </div>
-                    
-                    
-                    <div class="space-y-4">
-                        <div class="flex justify-between items-center">
-                            <span class="font-semibold text-gray-800">Python</span>
-                            <span class="text-sm text-gray-600">75%</span>
-                        </div>
-                        <div class="skill-bar">
-                            <div class="skill-progress" style="width: 75%"></div>
-                        </div>
-                    </div>
-                    
-                    
-                    <div class="space-y-4">
-                        <div class="flex justify-between items-center">
-                            <span class="font-semibold text-gray-800">React Native</span>
-                            <span class="text-sm text-gray-600">70%</span>
-                        </div>
-                        <div class="skill-bar">
-                            <div class="skill-progress" style="width: 70%"></div>
-                        </div>
-                    </div>
-                    
-                    
-                    <div class="space-y-4">
-                        <div class="flex justify-between items-center">
-                            <span class="font-semibold text-gray-800">UX / UI</span>
-                            <span class="text-sm text-gray-600">65%</span>
-                        </div>
-                        <div class="skill-bar">
-                            <div class="skill-progress" style="width: 65%"></div>
-                        </div>
-                    </div>
-                    
-                    
-                    <div class="space-y-4">
-                        <div class="flex justify-between items-center">
-                            <span class="font-semibold text-gray-800">GitHub</span>
-                            <span class="text-sm text-gray-600">85%</span>
-                        </div>
-                        <div class="skill-bar">
-                            <div class="skill-progress" style="width: 85%"></div>
-                        </div>
-                    </div>
-                </div>
-                
-                
-                <div class="mt-12">
-                    <h3 class="text-2xl font-bold mb-8 text-center">Autres Technologies</h3>
-                    <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
-                        <div class="text-center p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors">
-                            <i class="fab fa-node-js text-4xl text-green-600 mb-2"></i>
-                            <p class="font-medium">Node.js</p>
-                        </div>
-                        <div class="text-center p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors">
-                            <i class="fas fa-database text-4xl text-blue-600 mb-2"></i>
-                            <p class="font-medium">PostgreSQL</p>
-                        </div>
-                        <div class="text-center p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors">
-                            <i class="fab fa-docker text-4xl text-blue-500 mb-2"></i>
-                            <p class="font-medium">Docker</p>
-                        </div>
-                        <div class="text-center p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors">
-                            <i class="fas fa-robot text-4xl text-orange-600 mb-2"></i>
-                            <p class="font-medium">Arduino</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+    const projects = [
+      {
+        title: "TemoinX",
+        image: "assets/Temoin X.png",
+        color: "#2563eb",
+        text: "Application de signalement via carte interactive développée lors d'un code camp d'une semaine, avec authentification et statistiques.",
+        tags: ["React.js", "Node.js", "PostgreSQL", "Google Maps API"]
+      },
+      {
+        title: "Usine Connectée",
+        image: "assets/arduino.jpg",
+        color: "#d97706",
+        text: "Projet de groupe autour d'une usine connectée en Arduino avec balance, micro-onde et interface de gestion.",
+        tags: ["Arduino", "C++", "IoT"]
+      },
+      {
+        title: "App Django Football",
+        image: "assets/Django.jpg",
+        color: "#0f9f6e",
+        text: "Application Django développée en une semaine pendant la piscine WebTech pour répertorier des footballeurs et leurs clubs.",
+        tags: ["Django", "Python", "CRUD"]
+      },
+      {
+        title: "Réservation Sportive",
+        image: "assets/salle de sport.png",
+        color: "#f05252",
+        text: "Application de réservation pour événements sportifs avec création, modification et suppression de réservations.",
+        tags: ["Web App", "Gestion", "UX"]
+      },
+      {
+        title: "E-commerce Barcelona",
+        image: "assets/Barcelone.png",
+        color: "#0891b2",
+        text: "Application e-commerce FC Barcelone x Nike développée pendant le voyage de formation à Barcelone.",
+        tags: ["React", "Docker", "Stripe API"]
+      },
+      {
+        title: "Jeu d'attaque Bleach",
+        image: "assets/bleach.png",
+        color: "#7c3aed",
+        text: "Premier projet React: jeu tour par tour avec choix du personnage, de l'équipe adverse et des attaques.",
+        tags: ["React", "CSS", "JSON"]
+      }
+    ];
 
-    
-    <div id="contact" class="page">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-            <h2 class="text-4xl font-bold text-center mb-16 bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">Contactez-moi</h2>
-            
-            <div class="max-w-4xl mx-auto">
-                <div class="bg-white rounded-3xl shadow-2xl p-8">
-                    <div class="text-center mb-12">
-                        <p class="text-xl text-gray-600">
-                            Vous avez un projet en tête ? N'hésitez pas à me contacter !
-                        </p>
-                    </div>
-                    
-                    <div class="grid md:grid-cols-2 gap-8">
-                        <a href="mailto:komanboni30@gmail.com" class="group">
-                            <div class="bg-gradient-to-br from-red-400 to-pink-500 rounded-2xl p-6 text-white card-hover">
-                                <div class="flex items-center mb-4">
-                                    <i class="fas fa-envelope text-3xl mr-4"></i>
-                                    <h3 class="text-xl font-bold">Email</h3>
-                                </div>
-                                <p class="group-hover:underline">komanboni30@gmail.com</p>
-                            </div>
-                        </a>
-                        
-                        
-                        <a href="https://www.linkedin.com/in/koman-boni-787303293/" target="_blank" class="group">
-                            <div class="bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl p-6 text-white card-hover">
-                                <div class="flex items-center mb-4">
-                                    <i class="fab fa-linkedin text-3xl mr-4"></i>
-                                    <h3 class="text-xl font-bold">LinkedIn</h3>
-                                </div>
-                                <p class="group-hover:underline">linkedin.com/in/koman-boni-787303293/</p>
-                            </div>
-                        </a>
-                        
-                        
-                        <a href="https://github.com/KomanBoni" target="_blank" class="group">
-                            <div class="bg-gradient-to-br from-gray-700 to-gray-800 rounded-2xl p-6 text-white card-hover">
-                                <div class="flex items-center mb-4">
-                                    <i class="fab fa-github text-3xl mr-4"></i>
-                                    <h3 class="text-xl font-bold">GitHub</h3>
-                                </div>
-                                <p class="group-hover:underline">github.com/KomanBoni</p>
-                            </div>
-                        </a>
-                        
-                        
-                        <a href="https://gitlab.com/KomanBoni" target="_blank" class="group">
-                            <div class="bg-gradient-to-br from-orange-500 to-red-500 rounded-2xl p-6 text-white card-hover">
-                                <div class="flex items-center mb-4">
-                                    <i class="fab fa-gitlab text-3xl mr-4"></i>
-                                    <h3 class="text-xl font-bold">GitLab</h3>
-                                </div>
-                                <p class="group-hover:underline">gitlab.com/KomanBoni</p>
-                            </div>
-                        </a>
-                    </div>
-                    
-                    <div class="mt-12 text-center">
-                        <div class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-purple-500 to-blue-500 rounded-full mb-4">
-                            <i class="fas fa-handshake text-white text-2xl"></i>
-                        </div>
-                        <h3 class="text-2xl font-bold mb-4">Collaborons ensemble !</h3>
-                        <p class="text-gray-600 max-w-2xl mx-auto">
-                            Je suis toujours ouvert aux nouvelles opportunités et collaborations. 
-                            Que ce soit pour un stage, un projet freelance ou simplement pour échanger sur le développement web.
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+    const skills = [
+      ["HTML / CSS", 90, "#2563eb"],
+      ["JavaScript", 85, "#d97706"],
+      ["ReactJS", 80, "#0891b2"],
+      ["Python", 75, "#0f9f6e"],
+      ["React Native", 70, "#7c3aed"],
+      ["UX / UI", 65, "#f05252"],
+      ["GitHub", 85, "#344054"],
+      ["Docker / Arduino", 68, "#0f766e"]
+    ];
 
-    
-    <footer class="bg-gray-900 text-white py-12">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center">
-                <h3 class="text-2xl font-bold mb-4 bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">
-                    Boni Koman
-                </h3>
-                <p class="text-gray-400 mb-6">Développeur Web Full-Stack | Étudiant WebTech</p>
-                
-                <div class="flex justify-center space-x-6 mb-8">
-                    <a href="https://linkedin.com/in/bonikoman" target="_blank" class="text-gray-400 hover:text-blue-400 transition-colors">
-                        <i class="fab fa-linkedin text-2xl"></i>
-                    </a>
-                    <a href="https://github.com/KomanBoni" target="_blank" class="text-gray-400 hover:text-gray-300 transition-colors">
-                        <i class="fab fa-github text-2xl"></i>
-                    </a>
-                    <a href="https://gitlab.com/KomanBoni" target="_blank" class="text-gray-400 hover:text-orange-400 transition-colors">
-                        <i class="fab fa-gitlab text-2xl"></i>
-                    </a>
-                    <a href="mailto:komanboni30@gmail.com" class="text-gray-400 hover:text-red-400 transition-colors">
-                        <i class="fas fa-envelope text-2xl"></i>
-                    </a>
-                </div>
-                
-                <div class="border-t border-gray-800 pt-8">
-                    <p class="text-gray-500">&copy; 2025 Boni Koman. Tous droits réservés.</p>
-                </div>
-            </div>
-        </div>
-    </footer>
+    const travels = [
+      {
+        city: "Barcelone",
+        image: "https://barcelonesite.fr/images/barcelona_2.jpg",
+        text: "Formation React au campus partenaire Pompeu Fabra, visites d'entreprises et projet e-commerce en 2024."
+      },
+      {
+        city: "Dublin",
+        image: "https://media.routard.com/image/88/2/ha-penny-bridge.1607882.jpg",
+        text: "Formation avancée HTML, CSS et JavaScript au campus partenaire DCU Saint Patrick en 2023."
+      },
+      {
+        city: "Montréal",
+        image: "https://images.unsplash.com/photo-1517935706615-2717063c2225?w=900&h=600&fit=crop",
+        text: "Formation Unity et C# autour du jeu vidéo, avec une immersion internationale qui a renforcé ma créativité technique."
+      }
+    ];
 
-    <script>
-        
-        let currentSlide = 0;
-        const totalSlides = 3;
-        
-        
-        const hamburger = document.getElementById('hamburger');
-        const mobileMenu = document.getElementById('mobile-menu');
-        const closeMenu = document.getElementById('close-menu');
-        
-        hamburger.addEventListener('click', () => {
-            hamburger.classList.toggle('active');
-            mobileMenu.classList.toggle('active');
-        });
-        
-        closeMenu.addEventListener('click', () => {
-            hamburger.classList.remove('active');
-            mobileMenu.classList.remove('active');
-        });
-        
-        
-        function showPage(pageId) {
-            
-            const pages = document.querySelectorAll('.page');
-            pages.forEach(page => {
-                page.classList.remove('active');
-            });
-            
-            
-            document.getElementById(pageId).classList.add('active');
-            
-            
-            hamburger.classList.remove('active');
-            mobileMenu.classList.remove('active');
-            
-            
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-        
-        
-        function showSlide(n) {
-            const slides = document.querySelectorAll('.carousel-item');
-            const indicators = document.querySelectorAll('.indicator');
-            
-            if (n >= totalSlides) currentSlide = 0;
-            if (n < 0) currentSlide = totalSlides - 1;
-            
-            slides.forEach(slide => slide.classList.remove('active'));
-            indicators.forEach(indicator => {
-                indicator.classList.remove('bg-purple-600');
-                indicator.classList.add('bg-gray-300');
-            });
-            
-            slides[currentSlide].classList.add('active');
-            indicators[currentSlide].classList.remove('bg-gray-300');
-            indicators[currentSlide].classList.add('bg-purple-600');
-        }
-        
-        function nextSlide() {
-            currentSlide++;
-            showSlide(currentSlide);
-        }
-        
-        function prevSlide() {
-            currentSlide--;
-            showSlide(currentSlide);
-        }
-        
-        function goToSlide(n) {
-            currentSlide = n;
-            showSlide(currentSlide);
-        }
-        
-        
-        
-        function animateSkillBars() {
-            const skillBars = document.querySelectorAll('.skill-progress');
-            skillBars.forEach(bar => {
-                const width = bar.style.width;
-                bar.style.width = '0%';
-                setTimeout(() => {
-                    bar.style.width = width;
-                }, 500);
-            });
-        }
-        
-        
+    const contacts = [
+      ["Email", "komanboni30@gmail.com", "mailto:komanboni30@gmail.com", "Mail"],
+      ["CV", "Télécharger le PDF", "assets/cv-boni-koman.pdf", "FileDown", true],
+      ["LinkedIn", "koman-boni-787303293", "https://www.linkedin.com/in/koman-boni-787303293/", "Linkedin"],
+      ["GitHub", "KomanBoni", "https://github.com/KomanBoni", "Github"],
+      ["GitLab", "KomanBoni", "https://gitlab.com/KomanBoni", "GitBranch"]
+    ];
+
+    function toKebabIconName(name) {
+      return name
+        .replace(/([A-Za-z])([0-9])/g, "$1-$2")
+        .replace(/([a-z0-9])([A-Z])/g, "$1-$2")
+        .toLowerCase();
+    }
+
+    function Icon({ name, className = "icon" }) {
+      return <i data-lucide={toKebabIconName(name)} className={className}></i>;
+    }
+
+    function App() {
+      const [menuOpen, setMenuOpen] = useState(false);
+      const [activePage, setActivePage] = useState(() => {
+        const page = window.location.hash.replace("#", "");
+        return nav.some(([href]) => href === page) ? page : "accueil";
+      });
+
+      function goToPage(event, pageId) {
+        event.preventDefault();
+        setActivePage(pageId);
+        setMenuOpen(false);
+        window.history.pushState(null, "", `#${pageId}`);
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+
+      useEffect(() => {
+        lucide.createIcons();
         const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting && entry.target.id === 'competences') {
-                    animateSkillBars();
-                }
-            });
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) entry.target.classList.add("visible");
+          });
+        }, { threshold: .13 });
+
+        document.querySelectorAll("[data-reveal]").forEach((node) => observer.observe(node));
+        return () => observer.disconnect();
+      }, []);
+
+      useEffect(() => {
+        lucide.createIcons();
+        document.querySelectorAll(`#${activePage} [data-reveal]`).forEach((node) => {
+          node.classList.add("visible");
         });
-        
-        
-        observer.observe(document.getElementById('competences'));
-        
-        
-        document.addEventListener('DOMContentLoaded', function() {
-            
-            setTimeout(animateSkillBars, 1000);
-        });
-        
-        
-        document.addEventListener('click', (e) => {
-            if (!mobileMenu.contains(e.target) && !hamburger.contains(e.target)) {
-                hamburger.classList.remove('active');
-                mobileMenu.classList.remove('active');
-            }
-        });
-    </script>
+        window.dispatchEvent(new Event("resize"));
+      }, [menuOpen, activePage]);
+
+      useEffect(() => {
+        const syncHash = () => {
+          const page = window.location.hash.replace("#", "");
+          setActivePage(nav.some(([href]) => href === page) ? page : "accueil");
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        };
+
+        window.addEventListener("hashchange", syncHash);
+        return () => window.removeEventListener("hashchange", syncHash);
+      }, []);
+
+      return (
+        <main className="site-shell">
+          <nav className="nav" aria-label="Navigation principale">
+            <a href="#accueil" className="brand" onClick={(event) => goToPage(event, "accueil")}>
+              <span className="brand-mark">B</span>
+              Boni Koman
+            </a>
+            <ul className={`nav-links ${menuOpen ? "open" : ""}`}>
+              {nav.map(([href, label, icon]) => (
+                <li key={href}>
+                  <a href={`#${href}`} className={activePage === href ? "active" : ""} onClick={(event) => goToPage(event, href)}>
+                    <Icon name={icon} />
+                    {label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+            <button className="menu-button" aria-label="Ouvrir le menu" onClick={() => setMenuOpen(!menuOpen)}>
+              <Icon name={menuOpen ? "X" : "Menu"} />
+            </button>
+          </nav>
+
+          <header id="accueil" className={`hero view-page ${activePage === "accueil" ? "active" : ""}`}>
+            <canvas id="three-hero" aria-hidden="true"></canvas>
+            <div className="container">
+              <div className="hero-grid">
+                <div data-reveal>
+                  <div className="eyebrow"><span className="signal"></span> En recherche d'une alternance Machine Learning Engineer / IA</div>
+                  <h1>Boni <span>Koman</span></h1>
+                  <p className="hero-copy">
+                    Développeur web full-stack et étudiant WebTech, je cherche une alternance orientée Machine Learning Engineer, IA ou data. Je crée des interfaces modernes, des apps React, des scripts Python utiles et des expériences numériques qui ont du caractère.
+                  </p>
+                  <div className="hero-actions">
+                    <a className="btn btn-primary" href="#projets" onClick={(event) => goToPage(event, "projets")}><Icon name="Rocket" /> Voir mes projets</a>
+                    <a className="btn btn-soft" href="mailto:komanboni30@gmail.com"><Icon name="Mail" /> Me contacter</a>
+                    <a className="btn btn-soft" href="assets/cv-boni-koman.pdf" download><Icon name="FileDown" /> Télécharger mon CV</a>
+                  </div>
+                </div>
+                <div className="portrait-wrap" data-reveal>
+                  <img src="assets/Photo profil.png" alt="Portrait de Boni Koman" />
+                  <div className="portrait-tag">
+                    <span>React • Python • Mobile</span>
+                    <Icon name="Sparkles" />
+                  </div>
+                </div>
+              </div>
+              <div className="stats-strip" data-reveal>
+                {stats.map(([value, label]) => (
+                  <div className="stat" key={label}>
+                    <strong>{value}</strong>
+                    <span>{label}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </header>
+
+          <section id="profil" className={`content-page view-page ${activePage === "profil" ? "active" : ""}`}>
+            <div className="container">
+              <div className="section-head" data-reveal>
+                <div>
+                  <p className="section-kicker">Profil</p>
+                  <h2 className="section-title">Un développeur créatif, concret et orienté produit.</h2>
+                </div>
+                <p className="section-copy">J’aime transformer une idée en interface utilisable, propre et agréable, en combinant créativité, logique et attention au détail.</p>
+              </div>
+              <div className="about-grid">
+                <article className="glass-panel about-story" data-reveal>
+                  <p>
+                    Étudiant chez WebTech, je me construis autour du développement web moderne, de Python et des sujets IA: React, JavaScript, bases de données, mobile, automatisation et machine learning.
+                  </p>
+                  <p>
+                    Je suis actuellement en recherche d'une alternance en Machine Learning Engineer, IA ou data engineering, tout en continuant à développer une base fullstack solide.
+                  </p>
+                  <p>
+                    Mes expériences à Dublin, Barcelone, Montréal, Transactis, QzicMe et EPAS ESTICE m’ont appris à passer d’un brief à une vraie solution, avec une approche curieuse et pragmatique.
+                  </p>
+                  <div className="chips">
+                    {["Machine Learning", "IA", "Full-stack", "Python", "Mobile", "International"].map((chip) => (
+                      <span className="chip" key={chip}><Icon name="Check" /> {chip}</span>
+                    ))}
+                  </div>
+                </article>
+                <aside className="glass-panel activity-list" data-reveal>
+                  {activities.map(([label, icon, color]) => (
+                    <div className="activity" key={label} style={{ "--accent": color }}>
+                      <i><Icon name={icon} /></i>
+                      {label}
+                    </div>
+                  ))}
+                </aside>
+              </div>
+            </div>
+          </section>
+
+          <section id="experience" className={`content-page view-page ${activePage === "experience" ? "active" : ""}`}>
+            <div className="container">
+              <div className="section-head" data-reveal>
+                <div>
+                  <p className="section-kicker">Expérience</p>
+                  <h2 className="section-title">Des missions qui mélangent produit, données et exécution.</h2>
+                </div>
+              </div>
+              <div className="timeline">
+                {experiences.map((experience) => (
+                  <article className="glass-panel experience-item" key={experience.title} style={{ "--accent": experience.color }} data-reveal>
+                    <div className="date">{experience.date}</div>
+                    <div>
+                      <h3>{experience.title}</h3>
+                      <p className="role">{experience.role}</p>
+                      <p>{experience.text}</p>
+                    </div>
+                  </article>
+                ))}
+              </div>
+            </div>
+          </section>
+
+          <section id="projets" className={`content-page view-page ${activePage === "projets" ? "active" : ""}`}>
+            <div className="container">
+              <div className="section-head" data-reveal>
+                <div>
+                  <p className="section-kicker">Projets</p>
+                  <h2 className="section-title">Six projets, six terrains de jeu techniques.</h2>
+                </div>
+                <p className="section-copy">Front, back, mobile, IoT, e-commerce et jeu: un portfolio pensé pour montrer la polyvalence.</p>
+              </div>
+              <div className="projects-grid">
+                {projects.map((project) => (
+                  <article className="project-card" key={project.title} style={{ "--accent": project.color }} data-reveal>
+                    <div className="project-image">
+                      <img src={project.image} alt={project.title} />
+                    </div>
+                    <div className="project-body">
+                      <h3>{project.title}</h3>
+                      <p>{project.text}</p>
+                      <div className="tag-row">
+                        {project.tags.map((tag) => <span className="tag" key={tag}>{tag}</span>)}
+                      </div>
+                    </div>
+                  </article>
+                ))}
+              </div>
+            </div>
+          </section>
+
+          <section id="competences" className={`content-page view-page ${activePage === "competences" ? "active" : ""}`}>
+            <div className="container">
+              <div className="section-head" data-reveal>
+                <div>
+                  <p className="section-kicker">Compétences</p>
+                  <h2 className="section-title">Une stack web solide avec une vraie curiosité technique.</h2>
+                </div>
+              </div>
+              <div className="skills-layout">
+                <div className="glass-panel skill-radar" data-reveal>
+                  <div className="orbit one"></div>
+                  <div className="orbit two"></div>
+                  <div className="orbit three"></div>
+                  <div className="radar-core">Web<br />Mobile<br />Data</div>
+                </div>
+                <div className="glass-panel skill-bars" data-reveal>
+                  {skills.map(([label, level, color]) => (
+                    <div className="skill-line" key={label}>
+                      <div className="skill-top"><span>{label}</span><span>{level}%</span></div>
+                      <div className="bar" style={{ "--accent": color, "--level": `${level}%` }}><span></span></div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section id="voyages" className={`content-page view-page ${activePage === "voyages" ? "active" : ""}`}>
+            <div className="container">
+              <div className="section-head" data-reveal>
+                <div>
+                  <p className="section-kicker">Voyages & formations</p>
+                  <h2 className="section-title">Apprendre ailleurs, construire mieux ici.</h2>
+                </div>
+              </div>
+              <div className="travel-grid">
+                {travels.map((travel) => (
+                  <article className="travel-card" key={travel.city} data-reveal>
+                    <img src={travel.image} alt={travel.city} />
+                    <div>
+                      <h3>{travel.city}</h3>
+                      <p>{travel.text}</p>
+                    </div>
+                  </article>
+                ))}
+              </div>
+            </div>
+          </section>
+
+          <section id="contact" className={`content-page view-page ${activePage === "contact" ? "active" : ""}`}>
+            <div className="container">
+              <div className="glass-panel contact-panel" data-reveal>
+                <div>
+                  <p className="section-kicker">Contact</p>
+                  <h2>On construit quelque chose ?</h2>
+                  <p>Je suis ouvert aux opportunités de stage, projets freelance, collaborations et échanges autour du développement web.</p>
+                </div>
+                <div className="contact-links">
+                  {contacts.map(([title, value, href, icon, isDownload]) => (
+                    <a className="contact-link" href={href} target={href.startsWith("http") ? "_blank" : undefined} rel="noreferrer" download={isDownload ? true : undefined} key={title}>
+                      <Icon name={icon} />
+                      <span>{title}<small>{value}</small></span>
+                    </a>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <footer>
+            <div className="container">© 2026 Boni Koman. Portfolio React + Three.js.</div>
+          </footer>
+        </main>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+  </script>
+
+  <script type="module">
+    import * as THREE from "https://esm.sh/three@0.165.0";
+
+    const canvas = document.getElementById("three-hero");
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(42, 1, .1, 100);
+    const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+    const group = new THREE.Group();
+    const pointer = new THREE.Vector2(0, 0);
+    let width = 1;
+    let height = 1;
+
+    camera.position.set(0, 0, 9);
+    scene.add(group);
+
+    const palette = [0x2563eb, 0x0f9f6e, 0xd97706, 0xf05252, 0x0891b2, 0x101522];
+    const shapes = [
+      new THREE.IcosahedronGeometry(.58, 1),
+      new THREE.OctahedronGeometry(.55, 0),
+      new THREE.TorusKnotGeometry(.34, .11, 90, 12),
+      new THREE.BoxGeometry(.7, .7, .7)
+    ];
+
+    for (let i = 0; i < 42; i += 1) {
+      const material = new THREE.MeshStandardMaterial({
+        color: palette[i % palette.length],
+        roughness: .42,
+        metalness: .18,
+        transparent: true,
+        opacity: .78
+      });
+      const mesh = new THREE.Mesh(shapes[i % shapes.length], material);
+      const radius = 2.4 + Math.random() * 3.2;
+      const angle = Math.random() * Math.PI * 2;
+      mesh.position.set(Math.cos(angle) * radius + 1.8, (Math.random() - .5) * 5.6, Math.sin(angle) * 1.3);
+      mesh.rotation.set(Math.random() * Math.PI, Math.random() * Math.PI, Math.random() * Math.PI);
+      mesh.scale.setScalar(.55 + Math.random() * .9);
+      mesh.userData = { speed: .25 + Math.random() * .7, drift: Math.random() * Math.PI * 2 };
+      group.add(mesh);
+    }
+
+    const heroRing = new THREE.Mesh(
+      new THREE.TorusGeometry(2.4, .018, 16, 160),
+      new THREE.MeshBasicMaterial({ color: 0x101522, transparent: true, opacity: .2 })
+    );
+    heroRing.position.set(2.5, .1, -1.2);
+    heroRing.rotation.set(1.1, .3, .2);
+    group.add(heroRing);
+
+    scene.add(new THREE.AmbientLight(0xffffff, 1.6));
+    const key = new THREE.DirectionalLight(0xffffff, 2.2);
+    key.position.set(3, 5, 6);
+    scene.add(key);
+
+    function resize() {
+      const rect = canvas.getBoundingClientRect();
+      width = Math.max(1, rect.width);
+      height = Math.max(1, rect.height);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      renderer.setSize(width, height, false);
+      camera.aspect = width / height;
+      camera.updateProjectionMatrix();
+    }
+
+    window.addEventListener("resize", resize);
+    window.addEventListener("pointermove", (event) => {
+      pointer.x = (event.clientX / window.innerWidth - .5) * 2;
+      pointer.y = (event.clientY / window.innerHeight - .5) * 2;
+    });
+
+    function animate(time) {
+      const t = time * .001;
+      group.rotation.y += ((pointer.x * .16) - group.rotation.y) * .035;
+      group.rotation.x += ((-pointer.y * .08) - group.rotation.x) * .035;
+      group.children.forEach((child, index) => {
+        child.rotation.x += .003 * (child.userData?.speed || 1);
+        child.rotation.y += .004 * (child.userData?.speed || 1);
+        child.position.y += Math.sin(t + (child.userData?.drift || 0)) * .0018;
+        if (index % 5 === 0) child.position.x += Math.cos(t * .45 + index) * .0015;
+      });
+      heroRing.rotation.z = t * .08;
+      renderer.render(scene, camera);
+      requestAnimationFrame(animate);
+    }
+
+    resize();
+    requestAnimationFrame(animate);
+  </script>
 </body>
 </html>
